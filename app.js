@@ -9,6 +9,46 @@ const corsOptions ={
     optionSuccessStatus:200
 }
 
+app.get("/api/filmworld/movie/:id", (req, response) => {
+    // get movies
+    filmworld_options.path = '/api/filmworld/movie/'+ req.params.id
+
+    const request = https.request(filmworld_options, (res) => {
+        console.log(`statusCode: ${res.statusCode}`);
+        res.on("data", (d) => {
+            process.stdout.write(d);
+            response.send(d);
+        });
+        
+    });
+
+    request.on("error", (error) => {
+        console.error(error);
+    });
+
+request.end();
+});
+
+app.get("/api/cinemaworld/movie/:id", (req, response) => {
+
+    cinemaworld_options.path = '/api/cinemaworld/movie/'+ req.params.id
+
+    const request = https.request(cinemaworld_options, (res) => {
+        console.log(`statusCode: ${res.statusCode}`);
+        res.on("data", (d) => {
+            process.stdout.write(d);
+            response.send(d);
+        });
+        
+    });
+
+    request.on("error", (error) => {
+        console.error(error);
+    });
+
+request.end();
+});
+
 // let getMovie = async (movies_id, api_options) => {
 //     return new Promise((resolve, reject) => {
 //         const request = https.request(api_options, (res) => {
