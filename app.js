@@ -2,6 +2,12 @@ const express = require("express");
 const app = express();
 const port = 4000;
 const https = require("https");
+const cors = require('cors');
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
 
 // let getMovie = async (movies_id, api_options) => {
 //     return new Promise((resolve, reject) => {
@@ -21,7 +27,23 @@ const https = require("https");
 //     });
 // }
 
-// let getCheapestMovie = async (movies) => {
+let getMovies = async (api_options) => {
+        const request = https.request(api_options, (res) => {
+            res.on("data", (d) => {
+                console.log(d);
+                return(d);
+            });
+            
+        });
+    
+        request.on("error", (error) => {
+            return(error);
+        });
+    
+        request.end();
+}
+
+// let sortByCheapestMovie = async (movies) => {
 
 //     movies.forEach(movie => {
         
@@ -78,6 +100,25 @@ app.get("/api/filmworld/movies", (req, response) => {
 request.end();
 });
 
+app.get("/api/movies", (req, response) => {
+    // get movies
+
+
+    let movies = getSortedMovies();
+    console.log(movies);
+    // let sortedMovies = sortByCheapestMovie();
+
+    response.send(movies);
+
+});
+
+let getSortedMovies = async () => {
+        let cinemaWorldMovies = getMovies(cinemaworld_options);
+        return cinemaWorldMovies;
+}
+
+
+
 app.get("/api/cinemaworld/movies", (req, response) => {
     // get movies
 
@@ -96,6 +137,9 @@ app.get("/api/cinemaworld/movies", (req, response) => {
 
 request.end();
 });
+
+
+app.use(cors(corsOptions));
 
 app.listen(port, () => {
 console.log(`Webjet app listening at http://localhost:${port}`);
